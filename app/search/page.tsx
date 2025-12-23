@@ -5,7 +5,7 @@ import { searchPosts } from '@/services/postService';
 import PostGrid from '@/components/blog/PostGrid';
 import { Post } from '@/types';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-center';
+import { ArrowLeft } from 'lucide-react';
 import { ArrowLeft as ArrowLeftIcon } from 'lucide-react';
 
 function SearchResults() {
@@ -69,7 +69,7 @@ function SearchResults() {
         <div className="py-24 text-center border border-white/5 rounded-[3rem] bg-white/[0.02] backdrop-blur-md">
           <p className="text-white text-2xl font-bold tracking-tighter mb-2">Sin coincidencias</p>
           <p className="text-gray-500 max-w-xs mx-auto text-sm leading-relaxed">
-            No pudimos encontrar nada para "{query}". Intenta con términos generales como Diseño o Código.
+            No pudimos encontrar nada para &quot;{query}&quot;. Intenta con términos generales como Diseño o Código.
           </p>
         </div>
       )}
