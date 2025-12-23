@@ -17,19 +17,18 @@ const SkeletonCard = () => (
 );
 
 const NewsletterBox = () => (
-  <section className="my-12 p-8 md:p-12 bg-[#0a0a0a] border border-white/5 rounded-[2.5rem] text-center">
+  <section className="my-12 p-8 md:p-12 bg-white/[0.02] backdrop-blur-md border border-white/5 rounded-[2.5rem] text-center">
     <div className="max-w-xl mx-auto space-y-4">
       <span className="text-blue-500 font-bold tracking-[0.3em] uppercase text-[10px]">
         Newsletter
       </span>
       <h3 className="text-2xl md:text-3xl font-bold tracking-tighter text-white">
-        Únete a la Bitácora.
+        Suscríbete al Journal.
       </h3>
+      {/* TEXTO MEJORADO 1 */}
       <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-        Recibe mis reflexiones sobre diseño, fragmentos de código y el oficio de crear directamente en tu bandeja.
+        Una curaduría bimensual sobre estética funcional, arquitectura de software y el arte de construir productos digitales con alma.
       </p>
-      
-      {/* Aquí insertamos el componente de cliente que creamos arriba */}
       <NewsletterForm />
     </div>
   </section>
@@ -68,27 +67,24 @@ export default function Home() {
   }, [lastScrollY]);
 
   return (
-    <div className="min-h-screen bg-black overflow-x-hidden">
+    <div className="min-h-screen bg-transparent overflow-x-hidden">
       <div className={`
-        transition-all duration-500 ease-in-out sticky top-0 z-50 bg-black/80 backdrop-blur-md
+        transition-all duration-500 ease-in-out sticky top-0 z-50 bg-black/40 backdrop-blur-xl
         ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'}
       `}>
-        {/* HEADER ULTRA-COMPACTO */}
         <header className="max-w-7xl mx-auto px-6 py-4 md:py-6 border-b border-white/5">
           <div className="flex items-center justify-between">
-            
-            {/* Logo / Título reducido */}
             <div className="flex items-center gap-4">
               <h1 className="text-xl md:text-2xl font-bold tracking-tighter text-white">
                 Journal<span className="text-blue-500">.</span>
               </h1>
               <span className="hidden md:block w-[1px] h-4 bg-white/10"></span>
+              {/* TEXTO MEJORADO 2 (HEADER) */}
               <p className="hidden md:block text-gray-500 text-[10px] uppercase tracking-[0.2em] font-medium">
-                documentando procesos, celebrando el diseño y el oficio de hacer cosas bellas.
+                Documentando procesos, código y la búsqueda de la simplicidad en lo digital.
               </p>
             </div>
 
-            {/* Redes compactas */}
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-4 border-r border-white/10 pr-6 mr-2 hidden md:flex">
                 <a href="https://github.com/The-Ribeor" target='_blank' rel="noreferrer" className="text-gray-500 hover:text-white transition-colors">
@@ -101,8 +97,6 @@ export default function Home() {
                   <Instagram className="w-4 h-4" strokeWidth={1.5} />
                 </a>
               </div>
-              
-              {/* Info de versión pequeña */}
               <div className="text-right">
                 <span className="block text-[9px] text-white font-bold tracking-widest uppercase">v.1.0</span>
               </div>
@@ -111,13 +105,10 @@ export default function Home() {
         </header>
       </div>
       
-      {/* El MAIN sube casi al tope */}
-      <main className="pt-8 pb-24 max-w-7xl mx-auto px-6">
+      <main className="pt-8 pb-24 max-w-7xl mx-auto px-6 relative z-10">
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <SkeletonCard key={i} />
-            ))}
+            {[1, 2, 3, 4, 5, 6].map((i) => <SkeletonCard key={i} />)}
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">

@@ -41,7 +41,7 @@ const Navbar = () => {
               onClick={() => setIsSubscribeOpen(true)}
               className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-200 transition-all active:scale-95 shadow-lg shadow-white/5"
             >
-              Únete a la Bitácora.
+              Suscríbete al Journal.
             </button>
           </div>
 
@@ -77,7 +77,7 @@ const Navbar = () => {
               }}
               className="w-full bg-white text-black py-4 rounded-2xl font-bold text-lg"
             >
-              Únete a la Bitácora.
+              Suscríbete al Journal.
             </button>
           </div>
         )}
