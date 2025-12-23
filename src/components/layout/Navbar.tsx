@@ -17,7 +17,7 @@ const Navbar = () => {
           
           {/* LOGO */}
           <Link href="/" className="text-xl font-bold tracking-tighter text-white group">
-            the ribeor<span className="text-blue-500 group-hover:animate-pulse">.</span>
+            The Ribeor<span className="text-blue-500 group-hover:animate-pulse">.</span>
           </Link>
 
           {/* CATEGORÍAS (Escritorio) */}
@@ -41,7 +41,7 @@ const Navbar = () => {
               onClick={() => setIsSubscribeOpen(true)}
               className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-200 transition-all active:scale-95 shadow-lg shadow-white/5"
             >
-              Subscribe
+              Únete a la Bitácora.
             </button>
           </div>
 
@@ -77,7 +77,7 @@ const Navbar = () => {
               }}
               className="w-full bg-white text-black py-4 rounded-2xl font-bold text-lg"
             >
-              Subscribe
+              Únete a la Bitácora.
             </button>
           </div>
         )}

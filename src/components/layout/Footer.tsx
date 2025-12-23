@@ -38,7 +38,7 @@ const Footer = () => {
               <span className="text-white text-[10px] font-bold uppercase tracking-[0.3em]">Social</span>
               <div className="flex flex-col gap-3 text-sm">
                 <a 
-                  href="https://github.com/Diegoberrio1601" 
+                  href="https://github.com/The-Ribeor" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors"
@@ -54,7 +54,7 @@ const Footer = () => {
                   <Linkedin size={14} /> LinkedIn
                 </a>
                 <a 
-                  href="https://instagram.com/diegoberrio1602" 
+                  href="https://www.instagram.com/theribeor/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 text-gray-500 hover:text-white transition-colors"

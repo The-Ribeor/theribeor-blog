@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { searchPosts } from '@/services/postService';
 import PostGrid from '@/components/blog/PostGrid';
 import { Post } from '@/types';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 function SearchResults() {
   const searchParams = useSearchParams();
@@ -16,12 +18,7 @@ function SearchResults() {
     const fetchResults = async () => {
       try {
         setLoading(true);
-        // Logs en consola para depuración
-        console.log("🔍 Buscando en Firebase la palabra:", query);
-        
         const data = await searchPosts(query);
-        
-        console.log("✅ Resultados recibidos:", data.length);
         setResults(data);
       } catch (error) {
         console.error("❌ Error en la búsqueda:", error);
@@ -29,33 +26,49 @@ function SearchResults() {
         setLoading(false);
       }
     };
-
     fetchResults();
   }, [query]);
 
   return (
     <div className="max-w-7xl mx-auto px-6">
-      <header className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tighter mb-4">
-          {query ? `Resultados para "${query}"` : "Explorar todos los artículos"}
+      <header className="mb-20">
+        <Link 
+          href="/" 
+          className="inline-flex items-center gap-2 text-gray-500 hover:text-white transition-colors mb-8 group text-xs uppercase tracking-widest font-bold"
+        >
+          <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
+          Volver a la Bitácora
+        </Link>
+        
+        <h1 className="text-5xl md:text-6xl font-bold text-white tracking-tighter mb-4 leading-none">
+          {query ? (
+            <>Resultados para <span className="text-blue-500">{query}</span></>
+          ) : (
+            "Archivo General"
+          )}
         </h1>
-        <p className="text-gray-500 text-lg">
-          {loading ? "Buscando en nuestra base de datos..." : `${results.length} artículos encontrados.`}
+        <p className="text-gray-500 text-lg font-light tracking-tight">
+          {loading 
+            ? "Explorando la base de datos..." 
+            : `${results.length} ${results.length === 1 ? 'artículo encontrado' : 'artículos encontrados'}.`
+          }
         </p>
       </header>
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-blue-500"></div>
         </div>
       ) : results.length > 0 ? (
-        <div className="animate-in fade-in duration-500">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <PostGrid posts={results} />
         </div>
       ) : (
-        <div className="py-20 text-center border border-white/5 rounded-[2.5rem] bg-[#0a0a0a]">
-          <p className="text-gray-400 text-xl font-medium">No se encontraron resultados para tu búsqueda.</p>
-          <p className="text-gray-600 mt-2">Prueba buscando temas como Design, Tech o Insights.</p>
+        <div className="py-24 text-center border border-white/5 rounded-[3rem] bg-[#050505]">
+          <p className="text-white text-2xl font-bold tracking-tighter mb-2">Sin coincidencias</p>
+          <p className="text-gray-500 max-w-xs mx-auto text-sm leading-relaxed">
+            No pudimos encontrar nada para "{query}". Intenta con términos generales como Diseño o Código.
+          </p>
         </div>
       )}
     </div>
@@ -64,10 +77,12 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <div className="min-h-screen bg-black pt-32 pb-20">
+    <div className="min-h-screen bg-black pt-32 pb-32">
       <Suspense fallback={
-        <div className="text-white text-center pt-20">
-          <div className="animate-pulse text-gray-400">Iniciando motor de búsqueda...</div>
+        <div className="flex justify-center pt-20">
+          <div className="animate-pulse text-gray-500 uppercase tracking-widest text-[10px] font-bold">
+            Sincronizando Archivo...
+          </div>
         </div>
       }>
         <SearchResults />

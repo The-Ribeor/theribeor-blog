@@ -21,7 +21,7 @@ const AuthorBox = () => {
       <div className="flex-1 text-center md:text-left">
         <div className="inline-block px-3 py-1 rounded-full border border-blue-500/20 mb-4">
           <span className="text-blue-500 text-[10px] font-bold uppercase tracking-[0.3em] block">
-            Autor del Journal
+            Autor 
           </span>
         </div>
         

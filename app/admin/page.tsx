@@ -3,17 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from '@/lib/firebase';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
+import ReactMarkdown from 'react-markdown'; // 👈 Importante para la vista previa
 
 export default function AdminPage() {
   const [user, setUser] = useState<any>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [view, setView] = useState<'edit' | 'preview'>('edit'); // Toggle para móviles
   
-  // Estado completo para coincidir con tu objeto Post
   const [form, setForm] = useState({
     title: '',
     slug: '',
-    category: 'Design', // Valor por defecto
+    category: 'Design',
     imageUrl: '',
     description: '',
     content: ''
@@ -43,18 +44,14 @@ export default function AdminPage() {
     try {
       await addDoc(collection(db, 'posts'), {
         ...form,
-        // Generamos la fecha automáticamente para que siempre tenga el formato correcto
         date: new Date().toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric', 
-          year: 'numeric' 
+          month: 'short', day: 'numeric', year: 'numeric' 
         })
       });
       alert("¡Post publicado con éxito!");
       setForm({ title: '', slug: '', category: 'Design', imageUrl: '', description: '', content: '' });
     } catch (error) {
-      console.error(error);
-      alert("Error al publicar. Revisa las reglas de Firebase.");
+      alert("Error al publicar.");
     } finally {
       setLoading(false);
     }
@@ -74,68 +71,71 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white pt-32 pb-20 px-6">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-12">
+    <div className="min-h-screen bg-black text-white pt-20 pb-20 px-6">
+      <div className="max-w-[1400px] mx-auto">
+        
+        {/* Header Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
           <div>
-            <h1 className="text-4xl font-bold tracking-tighter">Editor de Contenido</h1>
-            <p className="text-gray-500 text-sm mt-2">Publicando como: {user.email}</p>
+            <h1 className="text-3xl font-bold tracking-tighter">Editor de Contenido</h1>
+            <p className="text-gray-500 text-sm italic">Escribe en Markdown para dar vida a tus historias.</p>
           </div>
-          <button onClick={() => signOut(auth)} className="bg-white/5 hover:bg-white/10 px-4 py-2 rounded-lg text-sm transition-colors border border-white/10">
+          <button onClick={() => signOut(auth)} className="text-gray-500 hover:text-red-500 text-xs uppercase tracking-widest transition-colors">
             Cerrar Sesión
           </button>
         </div>
         
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Columna Izquierda: Detalles */}
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Título del Post</label>
-              <input className="w-full bg-[#111] border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500" placeholder="Ej: El futuro del minimalismo" onChange={e => setForm({...form, title: e.target.value})} value={form.title} required />
-            </div>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Fila de Datos Básicos */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <input className="md:col-span-2 bg-[#111] border border-white/5 p-4 rounded-xl outline-none focus:border-blue-500 text-sm" placeholder="Título del Post" onChange={e => setForm({...form, title: e.target.value})} value={form.title} required />
+            <input className="bg-[#111] border border-white/5 p-4 rounded-xl outline-none focus:border-blue-500 text-sm" placeholder="URL-slug" onChange={e => setForm({...form, slug: e.target.value})} value={form.slug} required />
+            <select className="bg-[#111] border border-white/5 p-4 rounded-xl outline-none focus:border-blue-500 text-sm" onChange={e => setForm({...form, category: e.target.value})} value={form.category}>
+              <option value="Design">Design</option>
+              <option value="Tech">Tech</option>
+              <option value="Insights">Insights</option>
+            </select>
+          </div>
 
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Slug (URL)</label>
-              <input className="w-full bg-[#111] border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500" placeholder="ej-el-futuro-del-minimalismo" onChange={e => setForm({...form, slug: e.target.value})} value={form.slug} required />
-            </div>
+          {/* URL de Imagen y Descripción */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input className="bg-[#111] border border-white/5 p-4 rounded-xl outline-none focus:border-blue-500 text-sm" placeholder="URL de la imagen de portada" onChange={e => setForm({...form, imageUrl: e.target.value})} value={form.imageUrl} required />
+            <input className="md:col-span-2 bg-[#111] border border-white/5 p-4 rounded-xl outline-none focus:border-blue-500 text-sm" placeholder="Descripción corta para la tarjeta..." onChange={e => setForm({...form, description: e.target.value})} value={form.description} required />
+          </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Categoría</label>
-                <select className="w-full bg-[#111] border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500" onChange={e => setForm({...form, category: e.target.value})} value={form.category}>
-                  <option value="Design">Design</option>
-                  <option value="Tech">Tech</option>
-                  <option value="Insights">Insights</option>
-                </select>
+          {/* EDITOR SPLIT (ESCRITURA + PREVIEW) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-white/10 rounded-3xl overflow-hidden min-h-[600px]">
+            {/* Lado Escritura */}
+            <div className="bg-[#080808] p-6 border-r border-white/10">
+              <div className="flex justify-between mb-4">
+                <label className="text-[10px] uppercase tracking-widest text-blue-500 font-bold">Markdown Editor</label>
               </div>
-              <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Imagen (URL)</label>
-                <input className="w-full bg-[#111] border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500" placeholder="https://unsplash..." onChange={e => setForm({...form, imageUrl: e.target.value})} value={form.imageUrl} required />
+              <textarea 
+                className="w-full h-[500px] bg-transparent outline-none resize-none font-mono text-sm leading-relaxed text-gray-300"
+                placeholder="# Escribe tu historia aquí..."
+                onChange={e => setForm({...form, content: e.target.value})} 
+                value={form.content} 
+                required 
+              />
+            </div>
+
+            {/* Lado Vista Previa (Markdown Real) */}
+            <div className="bg-black p-8 overflow-y-auto max-h-[600px]">
+              <label className="text-[10px] uppercase tracking-widest text-gray-600 font-bold mb-6 block">Vista Previa en Vivo</label>
+              <div className="prose prose-invert prose-blue max-w-none">
+                <ReactMarkdown>
+                  {form.content || "*La previsualización aparecerá aquí...*"}
+                </ReactMarkdown>
               </div>
             </div>
-
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Descripción Corta</label>
-              <textarea className="w-full bg-[#111] border border-white/10 p-4 rounded-2xl h-32 outline-none focus:border-blue-500" placeholder="Una breve introducción para la tarjeta..." onChange={e => setForm({...form, description: e.target.value})} value={form.description} required />
-            </div>
           </div>
 
-          {/* Columna Derecha: Contenido Largo */}
-          <div className="space-y-6">
-            <div className="space-y-2 h-full flex flex-col">
-              <label className="text-xs uppercase tracking-widest text-gray-500 font-bold">Cuerpo del Artículo</label>
-              <textarea className="flex-1 w-full bg-[#111] border border-white/10 p-6 rounded-2xl outline-none focus:border-blue-500 min-h-[400px] font-mono text-sm" placeholder="Escribe aquí tu historia..." onChange={e => setForm({...form, content: e.target.value})} value={form.content} required />
-            </div>
-          </div>
-
-          <div className="md:col-span-2 pt-6">
-            <button 
-              disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 py-5 rounded-[2rem] font-bold text-xl transition-all shadow-xl shadow-blue-900/20 active:scale-[0.98]"
-            >
-              {loading ? 'Publicando...' : 'Publicar en The Ribeor'}
-            </button>
-          </div>
+          <button 
+            disabled={loading}
+            className="w-full bg-blue-600 hover:bg-blue-500 py-6 rounded-2xl font-bold text-lg transition-all active:scale-[0.99] disabled:opacity-50"
+          >
+            {loading ? 'Publicando...' : 'Lanzar publicación'}
+          </button>
         </form>
       </div>
     </div>
